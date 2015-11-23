@@ -55,21 +55,24 @@ public class K9TeleOpTest extends OpMode {
 	final static double CLAW_MAX_RANGE  = 0.7;
 
 	// position of the arm servo.
-	double armPosition;
+	double claw1Position;
 
 	// amount to change the arm servo position.
 	double armDelta = 0.1;
 
 	// position of the claw servo
-	double clawPosition;
+	double claw2Position;
 
 	// amount to change the claw servo position by
 	double clawDelta = 0.1;
 
 	DcMotor motorRight;
 	DcMotor motorLeft;
-	//Servo claw;
-	//Servo arm;
+	DcMotor motorRight2;
+	DcMotor motorLeft2;
+	DcMotor arm;
+	Servo claw1;
+	Servo claw2;
 
 	/**
 	 * Constructor
@@ -103,12 +106,15 @@ public class K9TeleOpTest extends OpMode {
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-		motorRight = hardwareMap.dcMotor.get("motor_2");
-		motorLeft = hardwareMap.dcMotor.get("motor_1");
+		motorRight2 = hardwareMap.dcMotor.get("rightFront");
+		motorLeft2 = hardwareMap.dcMotor.get("leftFront");
+		arm = hardwareMap.dcMotor.get("arm");
+		motorRight = hardwareMap.dcMotor.get("right");
+		motorLeft = hardwareMap.dcMotor.get("right");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 		
-		//arm = hardwareMap.servo.get("servo_1");
-		//claw = hardwareMap.servo.get("servo_6");
+		claw1 = hardwareMap.servo.get("servo_1");
+		claw2 = hardwareMap.servo.get("servo_2");
 
 		// assign the starting position of the wrist and claw
 		//armPosition = 0.2;
@@ -151,36 +157,58 @@ public class K9TeleOpTest extends OpMode {
 		// write the values to the motors
 		motorRight.setPower(right);
 		motorLeft.setPower(left);
+		motorRight2.setPower(right/3); // front wheels
+		motorLeft2.setPower(left/3);  // /3 because of gear ratio
+		/*
+		/
+		/
+		/  GAMEPAD 2
+		/
+		/
+		/
+		*/
+		float armThrottle = gamepad2.left_stick_y;
+		armThrottle = Range.clip(armThrottle, -1, 1);
+		armThrottle = (float)scaleInput(armThrottle);
+		//down =  (float)scaleInput(down);
+		arm.setPower(armThrottle);
+		//arm.setPower(down);
 
 		// update the position of the arm.
-		if (gamepad1.a) {
+		if (gamepad2.a) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
-			armPosition += armDelta;
+			claw1Position += armDelta;
 		}
 
-		if (gamepad1.y) {
+		if (gamepad2.b) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
-			armPosition -= armDelta;
+			claw1Position -= armDelta;
 		}
+
+
+
+
+
+
 
 		// update the position of the claw
-		if (gamepad1.x) {
-			clawPosition += clawDelta;
+		if (gamepad2.a) {
+			claw2Position -= clawDelta;
 		}
 
-		if (gamepad1.b) {
-			clawPosition -= clawDelta;
+		if (gamepad2.b) {
+			claw2Position += clawDelta;
 		}
 
         // clip the position values so that they never exceed their allowed range.
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+        claw1Position = Range.clip(claw1Position, ARM_MIN_RANGE, ARM_MAX_RANGE);
+        claw2Position = Range.clip(claw2Position, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 
 		// write position values to the wrist and claw servo
-		//arm.setPosition(armPosition);
-		//claw.setPosition(clawPosition);
+		claw1.setPosition(claw1Position);
+		claw2.setPosition(claw2Position);
 
 
 
@@ -191,8 +219,8 @@ public class K9TeleOpTest extends OpMode {
 		 * are currently write only.
 		 */
         telemetry.addData("Text", "*** Robot Data***");
-        //telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
-        //telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
+        telemetry.addData("claw1", "claw1:  " + String.format("%.2f", claw1Position));
+        telemetry.addData("claw2", "claw2:  " + String.format("%.2f", claw2Position));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
