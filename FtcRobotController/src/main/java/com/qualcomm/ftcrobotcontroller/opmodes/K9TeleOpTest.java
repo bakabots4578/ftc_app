@@ -110,7 +110,7 @@ public class K9TeleOpTest extends OpMode {
 		motorLeft2 = hardwareMap.dcMotor.get("leftFront");
 		arm = hardwareMap.dcMotor.get("arm");
 		motorRight = hardwareMap.dcMotor.get("right");
-		motorLeft = hardwareMap.dcMotor.get("right");
+		motorLeft = hardwareMap.dcMotor.get("left");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 		
 		claw1 = hardwareMap.servo.get("servo_1");
@@ -218,6 +218,9 @@ public class K9TeleOpTest extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
+
+
+
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("claw1", "claw1:  " + String.format("%.2f", claw1Position));
         telemetry.addData("claw2", "claw2:  " + String.format("%.2f", claw2Position));
