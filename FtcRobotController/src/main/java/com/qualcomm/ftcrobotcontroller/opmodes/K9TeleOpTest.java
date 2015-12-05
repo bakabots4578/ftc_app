@@ -222,8 +222,8 @@ public class K9TeleOpTest extends OpMode {
 
 
         telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("claw1", "claw1:  " + String.format("%.2f", claw1Position));
-        telemetry.addData("claw2", "claw2:  " + String.format("%.2f", claw2Position));
+        telemetry.addData("claw1", "claw1:  " + String.format("%.2f",   claw1Position));
+        telemetry.addData("claw2", "claw 2:  " + String.format("%.2f", claw2Position));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
